@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/cxanvv/SmogSpyWebsite/refs/heads/main/BrandIcon.ico">
 <title>SmogSpy — Buy Now</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -250,13 +251,7 @@
 <!-- NAVBAR -->
 <nav>
   <a href="index.html" class="nav-brand">
-    <div class="nav-logo-box">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2C9 5 6 7.5 6 11a6 6 0 0012 0c0-3.5-3-6-6-9z"/>
-        <path d="M12 14v4M9 18h6" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-      </svg>
-    </div>
-    <span class="nav-brand-name">SmogSpy</span>
+    <img src="https://github.com/cxanvv/SmogSpyWebsite/blob/main/BrandName.png?raw=true" alt="SmogSpy" style="height:36px; object-fit:contain;"/>
   </a>
   <ul class="nav-links">
     <li><a href="index.html">Home</a></li>
@@ -291,13 +286,14 @@
     </div>
 
     <div class="product-panel">
-      <img src="https://github.com/cxanvv/SmogSpyWebsite/blob/main/MainProductPhoto.webp?raw=true" alt="SmogSpy Air Purifier" style="width:100%; height:100%; object-fit:contain; border-radius:14px;"/>
+      <img id="mainProductImg" src="https://github.com/cxanvv/SmogSpyWebsite/blob/main/MainProductPhoto.webp?raw=true" alt="SmogSpy Air Purifier" style="width:100%; height:100%; object-fit:contain; border-radius:14px;"/>
 
       <div class="thumb-row">
-        <img src="https://github.com/cxanvv/SmogSpyWebsite/blob/main/ProductView1.webp?raw=true" class="thumb active" alt="View 1" style="object-fit:contain; padding:4px;"/>
-        <img src="https://github.com/cxanvv/SmogSpyWebsite/blob/main/ProductView2.webp?raw=true" class="thumb" alt="View 2" style="object-fit:contain; padding:4px;"/>
-        <img src="https://github.com/cxanvv/SmogSpyWebsite/blob/main/ProductView3.webp?raw=true" class="thumb" alt="View 3" style="object-fit:contain; padding:4px;"/>
-        <img src="https://github.com/cxanvv/SmogSpyWebsite/blob/main/ProductView4.webp?raw=true" class="thumb" alt="View 4 style="object-fit:contain; padding:4px;"/>
+        <img src="https://github.com/cxanvv/SmogSpyWebsite/blob/main/MainProductPhoto.webp?raw=true" class="thumb active" alt="View 1" style="width:60px; height:60px; object-fit:contain; padding:4px;" onclick="switchImage(this, 'https://github.com/cxanvv/SmogSpyWebsite/blob/main/MainProductPhoto.webp?raw=true')"/>
+        <img src="https://github.com/cxanvv/SmogSpyWebsite/blob/main/ProductView1.webp?raw=true" class="thumb" alt="View 2" style="width:60px; height:60px; object-fit:contain; padding:4px;" onclick="switchImage(this, 'https://github.com/cxanvv/SmogSpyWebsite/blob/main/ProductView1.webp?raw=true')"/>
+        <img src="https://github.com/cxanvv/SmogSpyWebsite/blob/main/ProductView2.webp?raw=true" class="thumb" alt="View 3" style="width:60px; height:60px; object-fit:contain; padding:4px;" onclick="switchImage(this, 'https://github.com/cxanvv/SmogSpyWebsite/blob/main/ProductView2.webp?raw=true')"/>
+        <img src="https://github.com/cxanvv/SmogSpyWebsite/blob/main/ProductView3.webp?raw=true" class="thumb" alt="View 4" style="width:60px; height:60px;object-fit:contain; padding:4px;" onclick="switchImage(this, 'https://github.com/cxanvv/SmogSpyWebsite/blob/main/ProductView3.webp?raw=true')"/>
+        <img src="https://github.com/cxanvv/SmogSpyWebsite/blob/main/ProductView4.webp?raw=true" class="thumb" alt="View 5" style="width:60px; height:60px; object-fit:contain; padding:4px;" onclick="switchImage(this, 'https://github.com/cxanvv/SmogSpyWebsite/blob/main/ProductView4.webp?raw=true')"/>
       </div>
 
       <div class="product-name">SmogSpy Air Purifier</div>
@@ -310,7 +306,7 @@
       </div>
 
       <div class="price-row">
-        <div class="price-main" id="displayPrice">$299</div>
+        <div class="price-main" id="displayPrice">Rp 319,000</div>
         <!-- <div class="price-old">$399</div> -->
         <div class="price-save">Special Offer</div>
       </div>
@@ -510,11 +506,10 @@
 
     <!-- ORDER SUMMARY -->
     <div class="order-summary">
-      <div class="summary-row"><span>Unit Price</span><span id="sumUnit">$299.00</span></div>
+      <div class="summary-row"><span>Unit Price</span><span id="sumUnit">Rp 319,000.00</span></div>
       <div class="summary-row"><span>Quantity</span><span id="sumQty">× 1</span></div>
       <div class="summary-row"><span>Shipping</span><span style="color:var(--green-600); font-weight:600;">Free</span></div>
-      <!-- <div class="summary-row"><span>Tax (est. 8%)</span><span id="sumTax">$23.92</span></div> -->
-      <div class="summary-row total"><span>Total</span><span id="sumTotal">$299.00</span></div>
+      <div class="summary-row total"><span>Total</span><span id="sumTotal">Rp 319,000.00</span></div>
     </div>
 
     <button class="btn-buy" onclick="placeOrder()">
@@ -537,7 +532,13 @@
 </footer>
 
 <script>
-  const UNIT_PRICE = 299;
+  function switchImage(thumb, url) {
+    document.getElementById('mainProductImg').src = url;
+    document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+    thumb.classList.add('active');
+  }
+
+  const UNIT_PRICE = 319000;
   let qty = 1;
 
   function changeQty(d) {
@@ -550,10 +551,10 @@
     const sub = UNIT_PRICE * qty;
     const tax = sub * 0.08;
     const total = sub;
-    document.getElementById('sumUnit').textContent = '$' + UNIT_PRICE.toFixed(2);
+    document.getElementById('sumUnit').textContent = 'Rp ' + UNIT_PRICE.toLocaleString('en-US');
     document.getElementById('sumQty').textContent = '× ' + qty;
     // document.getElementById('sumTax').textContent = '$' + tax.toFixed(2);
-    document.getElementById('sumTotal').textContent = '$' + total.toFixed(2);
+    document.getElementById('sumTotal').textContent = 'Rp ' + total.toLocaleString('en-US');
   }
 
   function selectVariant(btn, groupId, val) {
