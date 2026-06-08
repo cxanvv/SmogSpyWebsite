@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SmogSpy — Buy Now</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --white: #ffffff;
+    --gray-50: #f8fafc;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-400: #94a3b8;
+    --gray-600: #475569;
+    --gray-800: #1e293b;
+    --blue-50: #eff6ff;
+    --blue-100: #dbeafe;
+    --blue-200: #bfdbfe;
+    --blue-500: #3b82f6;
+    --blue-600: #2563eb;
+    --blue-700: #1d4ed8;
+    --sky-50: #f0f9ff;
+    --sky-100: #e0f2fe;
+    --sky-200: #bae6fd;
+    --sky-400: #38bdf8;
+    --sky-500: #0ea5e9;
+    --green-50: #f0fdf4;
+    --green-200: #bbf7d0;
+    --green-600: #16a34a;
+    --green-800: #166534;
+    --red-50: #fef2f2;
+    --red-200: #fecaca;
+    --red-600: #dc2626;
+    --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  }
+  body { font-family: var(--font); background: var(--gray-50); color: var(--gray-800); line-height: 1.6; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,0.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--gray-200);
+    padding: 0 2rem; height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .nav-logo-box {
+    width: 34px; height: 34px; border-radius: 8px;
+    background: linear-gradient(135deg, var(--sky-400), var(--blue-500));
+    display: flex; align-items: center; justify-content: center;
+  }
+  .nav-logo-box svg { width: 18px; height: 18px; fill: white; }
+  .nav-brand-name { font-size: 1.15rem; font-weight: 700; color: var(--gray-800); letter-spacing: -0.3px; }
+  .nav-links { display: flex; gap: 0.25rem; list-style: none; }
+  .nav-links a { text-decoration: none; color: var(--gray-600); font-size: 0.9rem; padding: 0.4rem 0.9rem; border-radius: 6px; transition: background 0.15s, color 0.15s; }
+  .nav-links a:hover { background: var(--gray-100); color: var(--gray-800); }
+  .nav-links a.active { color: var(--blue-600); font-weight: 600; background: var(--blue-50); }
+  .nav-cta { background: var(--blue-600); color: white !important; padding: 0.4rem 1.1rem !important; border-radius: 8px !important; font-weight: 600 !important; }
+
+  /* PAGE */
+  .page-wrap {
+    max-width: 1100px; margin: 2.5rem auto; padding: 0 2rem;
+    display: grid; grid-template-columns: 1fr 420px; gap: 2rem; align-items: start;
+  }
+
+  /* PRODUCT PANEL */
+  .product-panel {
+    background: white; border: 1.5px solid var(--gray-200);
+    border-radius: 20px; padding: 2rem; position: sticky; top: 84px;
+  }
+  .product-img-box {
+    width: 100%; aspect-ratio: 4/3;
+    background: linear-gradient(160deg, var(--sky-50), var(--blue-100));
+    border-radius: 14px; border: 1.5px dashed var(--blue-200);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 8px; margin-bottom: 1.5rem;
+  }
+  .product-img-box svg { width: 48px; height: 48px; opacity: 0.35; }
+  .product-img-box span { font-size: 0.75rem; color: var(--blue-400); font-weight: 500; }
+
+  .thumb-row { display: flex; gap: 8px; margin-bottom: 1.5rem; }
+  .thumb {
+    flex: 1; aspect-ratio: 1; border-radius: 8px;
+    background: var(--gray-100); border: 1.5px solid var(--gray-200);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 0.65rem; color: var(--gray-400); font-weight: 500;
+    transition: border-color 0.15s;
+  }
+  .thumb:hover, .thumb.active { border-color: var(--blue-400); }
+
+  .product-name { font-size: 1.3rem; font-weight: 800; color: var(--gray-800); margin-bottom: 0.25rem; }
+  .product-model { font-size: 0.82rem; color: var(--gray-400); margin-bottom: 0.75rem; }
+  .rating-row { display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; }
+  .stars-small { color: var(--sky-400); font-size: 0.85rem; letter-spacing: 1px; }
+  .rating-count { font-size: 0.8rem; color: var(--gray-400); }
+
+  .price-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 0.5rem; }
+  .price-main { font-size: 2rem; font-weight: 800; color: var(--blue-600); }
+  .price-old { font-size: 1rem; color: var(--gray-400); text-decoration: line-through; }
+  .price-save { font-size: 0.75rem; font-weight: 700; background: var(--green-50); color: var(--green-800); padding: 0.2rem 0.6rem; border-radius: 99px; border: 1px solid var(--green-200); }
+
+  .stock-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 0.78rem; font-weight: 600; color: var(--green-600);
+    margin-bottom: 1.25rem;
+  }
+  .stock-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green-600); }
+
+  .divider { border: none; border-top: 1px solid var(--gray-100); margin: 1.25rem 0; }
+
+  /* VARIANT */
+  .opt-label { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gray-600); margin-bottom: 0.6rem; }
+  .variant-row { display: flex; gap: 8px; margin-bottom: 1.25rem; flex-wrap: wrap; }
+  .variant-btn {
+    padding: 0.4rem 0.9rem; border-radius: 8px; border: 1.5px solid var(--gray-200);
+    background: white; cursor: pointer; font-size: 0.85rem; font-weight: 500; color: var(--gray-700);
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .variant-btn:hover { border-color: var(--blue-300); }
+  .variant-btn.selected { border-color: var(--blue-500); background: var(--blue-50); color: var(--blue-700); font-weight: 700; }
+
+  /* SHIPPING */
+  .ship-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem; }
+  .ship-tag {
+    font-size: 0.72rem; font-weight: 600; padding: 0.25rem 0.7rem;
+    border-radius: 99px; background: var(--sky-50); color: var(--blue-700);
+    border: 1px solid var(--sky-200); display: flex; align-items: center; gap: 4px;
+  }
+
+  /* TRUST STRIP */
+  .trust-strip {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem; margin-bottom: 1.25rem;
+  }
+  .trust-item {
+    background: var(--gray-50); border-radius: 10px; padding: 0.75rem 0.5rem;
+    text-align: center; border: 1px solid var(--gray-100);
+  }
+  .trust-item svg { width: 18px; height: 18px; stroke: var(--sky-500); fill: none; stroke-width: 2; stroke-linecap: round; margin-bottom: 4px; }
+  .trust-item p { font-size: 0.68rem; font-weight: 600; color: var(--gray-600); line-height: 1.3; }
+
+  /* CHECKOUT */
+  .checkout-panel {
+    background: white; border: 1.5px solid var(--gray-200);
+    border-radius: 20px; padding: 2rem;
+  }
+  .checkout-title { font-size: 1.15rem; font-weight: 800; color: var(--gray-800); margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--gray-100); }
+
+  .form-group { margin-bottom: 1.1rem; }
+  .form-label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--gray-600); margin-bottom: 0.35rem; }
+  .form-input, .form-select {
+    width: 100%; padding: 0.65rem 0.85rem; border: 1.5px solid var(--gray-200);
+    border-radius: 10px; font-size: 0.9rem; color: var(--gray-800);
+    font-family: inherit; background: white; transition: border-color 0.15s;
+    outline: none;
+  }
+  .form-input:focus, .form-select:focus { border-color: var(--blue-400); box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+  .form-input::placeholder { color: var(--gray-400); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+
+  /* QTY */
+  .qty-control { display: flex; align-items: center; gap: 0; border: 1.5px solid var(--gray-200); border-radius: 10px; width: fit-content; overflow: hidden; }
+  .qty-btn {
+    width: 38px; height: 38px; background: var(--gray-50); border: none; cursor: pointer;
+    font-size: 1.1rem; color: var(--gray-600); display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s; user-select: none;
+  }
+  .qty-btn:hover { background: var(--gray-100); }
+  .qty-val { width: 44px; text-align: center; font-size: 0.95rem; font-weight: 700; color: var(--gray-800); border-left: 1px solid var(--gray-200); border-right: 1px solid var(--gray-200); line-height: 38px; }
+
+  /* PAYMENT METHODS */
+  .payment-tabs { display: flex; gap: 6px; margin-bottom: 1.1rem; flex-wrap: wrap; }
+  .pay-tab {
+    flex: 1; min-width: 80px; padding: 0.5rem 0.75rem; border-radius: 10px;
+    border: 1.5px solid var(--gray-200); background: white; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    font-size: 0.7rem; font-weight: 600; color: var(--gray-600);
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .pay-tab svg { width: 20px; height: 20px; }
+  .pay-tab:hover { border-color: var(--blue-200); }
+  .pay-tab.selected { border-color: var(--blue-500); background: var(--blue-50); color: var(--blue-700); }
+
+  .pay-form { display: none; }
+  .pay-form.active { display: block; }
+
+  /* ORDER SUMMARY */
+  .order-summary {
+    background: var(--gray-50); border-radius: 12px; padding: 1rem 1.1rem;
+    margin-bottom: 1.25rem; border: 1px solid var(--gray-100);
+  }
+  .summary-row { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--gray-600); padding: 0.3rem 0; }
+  .summary-row.total { font-weight: 800; color: var(--gray-800); font-size: 1rem; border-top: 1px solid var(--gray-200); margin-top: 0.4rem; padding-top: 0.6rem; }
+
+  .btn-buy {
+    width: 100%; padding: 0.9rem; border-radius: 12px; border: none;
+    background: var(--blue-600); color: white; font-size: 1rem; font-weight: 700;
+    cursor: pointer; transition: background 0.15s, transform 0.1s;
+    font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-buy:hover { background: var(--blue-700); transform: translateY(-1px); }
+  .btn-buy:active { transform: scale(0.98); }
+
+  .secure-note { display: flex; align-items: center; justify-content: center; gap: 5px; font-size: 0.73rem; color: var(--gray-400); margin-top: 0.75rem; }
+  .secure-note svg { width: 13px; height: 13px; stroke: var(--gray-400); fill: none; stroke-width: 2; stroke-linecap: round; }
+
+  /* SUCCESS MODAL OVERLAY */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 999;
+    background: rgba(0,0,0,0.45); align-items: center; justify-content: center;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal-box {
+    background: white; border-radius: 24px; padding: 2.5rem 2rem;
+    max-width: 420px; width: 90%; text-align: center;
+    animation: popIn 0.25s ease;
+  }
+  @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .modal-icon {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: var(--green-50); border: 2px solid var(--green-200);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.25rem;
+  }
+  .modal-icon svg { width: 34px; height: 34px; stroke: var(--green-600); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+  .modal-title { font-size: 1.4rem; font-weight: 800; color: var(--gray-800); margin-bottom: 0.5rem; }
+  .modal-sub { font-size: 0.88rem; color: var(--gray-600); line-height: 1.6; margin-bottom: 0.75rem; }
+  .modal-order { font-size: 0.78rem; color: var(--gray-400); margin-bottom: 1.5rem; }
+  .modal-order span { font-weight: 700; color: var(--gray-800); }
+  .modal-close {
+    display: inline-block; padding: 0.7rem 2rem; border-radius: 10px;
+    background: var(--blue-600); color: white; font-weight: 700; font-size: 0.9rem;
+    cursor: pointer; border: none; font-family: inherit; transition: background 0.15s;
+  }
+  .modal-close:hover { background: var(--blue-700); }
+
+  footer { background: var(--gray-800); color: rgba(255,255,255,0.6); padding: 2rem 2rem; text-align: center; font-size: 0.85rem; margin-top: 4rem; }
+  footer .footer-brand { color: white; font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem; }
+  footer a { color: rgba(255,255,255,0.6); text-decoration: none; margin: 0 0.75rem; }
+
+  @media (max-width: 800px) {
+    .page-wrap { grid-template-columns: 1fr; }
+    .product-panel { position: static; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="index.html" class="nav-brand">
+    <div class="nav-logo-box">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2C9 5 6 7.5 6 11a6 6 0 0012 0c0-3.5-3-6-6-9z"/>
+        <path d="M12 14v4M9 18h6" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="nav-brand-name">SmogSpy</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="purchase.html" class="active">Buy Now</a></li>
+    <li><a href="manual.html">Manual</a></li>
+    <li><a href="purchase.html" class="nav-cta">Shop</a></li>
+  </ul>
+</nav>
+
+<!-- SUCCESS MODAL -->
+<div class="modal-overlay" id="successModal">
+  <div class="modal-box">
+    <div class="modal-icon">
+      <svg viewBox="0 0 24 24"><polyline points="20,6 9,17 4,12"/></svg>
+    </div>
+    <div class="modal-title">Order Placed!</div>
+    <p class="modal-sub">Thank you for your purchase. Your SmogSpy unit is being prepared for shipping. You will receive a confirmation email shortly.</p>
+    <p class="modal-order">Order ID: <span id="orderId">—</span></p>
+    <button class="modal-close" onclick="closeModal()">Continue Shopping</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="page-wrap">
+
+  <!-- LEFT: PRODUCT INFO -->
+  <div>
+    <div style="font-size:0.82rem; color:var(--gray-400); margin-bottom:1rem;">
+      <a href="index.html" style="color:var(--gray-400); text-decoration:none;">Home</a>
+      <span style="margin:0 0.4rem;">›</span>
+      <a href="purchase.html" style="color:var(--blue-600); text-decoration:none; font-weight:600;">Buy Now</a>
+    </div>
+
+    <div class="product-panel">
+      <div class="product-img-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="1.5" stroke-linecap="round">
+          <rect x="3" y="3" width="18" height="18" rx="4"/>
+          <path d="M12 8v8M8 12h8"/>
+        </svg>
+        <span>Product Image</span>
+      </div>
+
+      <div class="thumb-row">
+        <div class="thumb active">View 1</div>
+        <div class="thumb">View 2</div>
+        <div class="thumb">View 3</div>
+        <div class="thumb">View 4</div>
+      </div>
+
+      <div class="product-name">SmogSpy Air Purifier</div>
+      <div class="product-model">Model No. SS-1234-2026</div>
+
+      <div class="rating-row">
+        <span class="stars-small">★★★★★</span>
+        <span style="font-size:0.88rem; font-weight:700; color:var(--gray-800);">4.9</span>
+        <span class="rating-count">(2,847 reviews)</span>
+      </div>
+
+      <div class="price-row">
+        <div class="price-main" id="displayPrice">$299</div>
+        <!-- <div class="price-old">$399</div> -->
+        <div class="price-save">Special Offer</div>
+      </div>
+      <div class="stock-badge"><span class="stock-dot"></span> In Stock</div>
+
+      <hr class="divider"/>
+
+      <div class="opt-label">Color Variant</div>
+      <div class="variant-row" id="colorGroup">
+        <button class="variant-btn selected" onclick="selectVariant(this,'colorGroup','Default')">Default</button>
+        <!-- <button class="variant-btn" onclick="selectVariant(this,'colorGroup','Sky Blue')">Sky Blue</button>
+        <button class="variant-btn" onclick="selectVariant(this,'colorGroup','Slate Gray')">Slate Gray</button> -->
+      </div>
+
+      <!-- <div class="opt-label">Room Size</div>
+      <div class="variant-row" id="sizeGroup">
+        <button class="variant-btn selected" onclick="selectVariant(this,'sizeGroup','Small')">Small (300 ft²)</button>
+        <button class="variant-btn" onclick="selectVariant(this,'sizeGroup','Medium')">Medium (600 ft²)</button>
+        <button class="variant-btn" onclick="selectVariant(this,'sizeGroup','Large')">Large (800 ft²)</button>
+      </div> -->
+
+      <hr class="divider"/>
+
+      <div class="ship-tags">
+        <span class="ship-tag">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          Free Shipping
+        </span>
+        <span class="ship-tag">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20,6 9,17 4,12"/></svg>
+          30-Day Returns
+        </span>
+        <span class="ship-tag">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          1-Year Warranty
+        </span>
+      </div>
+
+      <div class="trust-strip">
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <p>Packaging<br>Protected</p>
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+          <p>Home<br>Delivery</p>
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+          <p>24/7<br>Support</p>
+        </div>
+      </div>
+
+      <div style="font-size:0.8rem; color:var(--gray-600); line-height:1.65;">
+        <strong style="color:var(--gray-800);">Description:</strong><br>
+        The SmogSpy Air Purifier doesn't just clean your air — it watches over it. Equipped with a high quality filter and real-time CO₂, humidity, and temperature sensors, SmogSpy gives you full visibility into your indoor environment through the Blynk IoT app. Whether you're at home or away, you'll always know exactly what's in the air your family breathes. Whisper-quiet, energy efficient, and built to last — this is air purification with intelligence.
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: CHECKOUT -->
+  <div class="checkout-panel">
+    <div class="checkout-title">Complete Your Order</div>
+
+    <!-- QTY -->
+    <div class="form-group">
+      <div class="form-label">Quantity</div>
+      <div style="display:flex; align-items:center; gap:1rem;">
+        <div class="qty-control">
+          <button class="qty-btn" onclick="changeQty(-1)">−</button>
+          <div class="qty-val" id="qtyVal">1</div>
+          <button class="qty-btn" onclick="changeQty(1)">+</button>
+        </div>
+        <span style="font-size:0.82rem; color:var(--gray-400);" id="stockNote">Max 10 per order</span>
+      </div>
+    </div>
+
+    <hr class="divider"/>
+
+    <!-- SHIPPING INFO -->
+    <div style="font-size:0.88rem; font-weight:700; color:var(--gray-800); margin-bottom:0.85rem;">Shipping Information</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">First Name</label>
+        <input class="form-input" type="text" placeholder="Bryan"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Last Name</label>
+        <input class="form-input" type="text" placeholder="Marco"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Email Address</label>
+      <input class="form-input" type="email" placeholder="you@email.com"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Phone Number</label>
+      <input class="form-input" type="tel" placeholder="+62 (555) 000-0000"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Shipping Address</label>
+      <input class="form-input" type="text" placeholder="Street address"/>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">City</label>
+        <input class="form-input" type="text" placeholder="Bandung"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">ZIP Code</label>
+        <input class="form-input" type="text" placeholder="10001"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Country</label>
+      <select class="form-select">
+        <option>Indonesia</option>
+        <option>Canada</option>
+        <option>United Kingdom</option>
+        <option>Australia</option>
+        <option>United States</option>
+        <option>Other</option>
+      </select>
+    </div>
+
+    <hr class="divider"/>
+
+    <!-- PAYMENT -->
+    <div style="font-size:0.88rem; font-weight:700; color:var(--gray-800); margin-bottom:0.85rem;">Payment Method</div>
+    <div class="payment-tabs">
+      <div class="pay-tab selected" onclick="selectPay(this,'creditCard')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        Credit Card
+      </div>
+      <div class="pay-tab" onclick="selectPay(this,'paypal')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 11.5C7 14 9 16 12 16h2c3 0 5-2 5-5 0-2-1.5-3.5-4-3.5H8L7 16H5L3.5 8H15c3.5 0 5.5 2 5.5 4.5"/></svg>
+        PayPal
+      </div>
+      <div class="pay-tab" onclick="selectPay(this,'transfer')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        Bank Transfer
+      </div>
+    </div>
+
+    <!-- Credit Card Form -->
+    <div class="pay-form active" id="creditCard">
+      <div class="form-group">
+        <label class="form-label">Card Number</label>
+        <input class="form-input" type="text" placeholder="1234  5678  9012  3456" maxlength="19"/>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Expiry Date</label>
+          <input class="form-input" type="text" placeholder="MM / YY" maxlength="7"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">CVV</label>
+          <input class="form-input" type="text" placeholder="•••" maxlength="4"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Cardholder Name</label>
+        <input class="form-input" type="text" placeholder="Bryan Marco"/>
+      </div>
+    </div>
+
+    <!-- PayPal Form -->
+    <div class="pay-form" id="paypal">
+      <div style="background:var(--blue-50); border:1.5px solid var(--blue-200); border-radius:12px; padding:1.25rem; text-align:center; margin-bottom:1rem;">
+        <div style="font-size:0.88rem; color:var(--blue-700); font-weight:600; margin-bottom:0.3rem;">Pay with PayPal</div>
+        <div style="font-size:0.78rem; color:var(--gray-600);">You will be redirected to PayPal to complete your payment securely.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">PayPal Email</label>
+        <input class="form-input" type="email" placeholder="you@paypal.com"/>
+      </div>
+    </div>
+
+    <!-- Bank Transfer Form -->
+    <div class="pay-form" id="transfer">
+      <div style="background:var(--gray-50); border:1px solid var(--gray-200); border-radius:12px; padding:1.1rem; margin-bottom:1rem;">
+        <div style="font-size:0.8rem; font-weight:700; color:var(--gray-800); margin-bottom:0.5rem;">Bank Account Details</div>
+        <div style="font-size:0.78rem; color:var(--gray-600); line-height:1.8;">
+          Bank: HSBC<br>
+          Account No.: 0123-4567-8910<br>
+          Routing No.: 123456789<br>
+          Reference: Use your Order ID
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Transfer Reference</label>
+        <input class="form-input" type="text" placeholder="Enter your transfer reference"/>
+      </div>
+    </div>
+
+    <hr class="divider"/>
+
+    <!-- ORDER SUMMARY -->
+    <div class="order-summary">
+      <div class="summary-row"><span>Unit Price</span><span id="sumUnit">$299.00</span></div>
+      <div class="summary-row"><span>Quantity</span><span id="sumQty">× 1</span></div>
+      <div class="summary-row"><span>Shipping</span><span style="color:var(--green-600); font-weight:600;">Free</span></div>
+      <!-- <div class="summary-row"><span>Tax (est. 8%)</span><span id="sumTax">$23.92</span></div> -->
+      <div class="summary-row total"><span>Total</span><span id="sumTotal">$299.00</span></div>
+    </div>
+
+    <button class="btn-buy" onclick="placeOrder()">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg>
+      Place Order
+    </button>
+
+    <div class="secure-note">
+      <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      Secured with 256-bit SSL encryption
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-brand">SmogSpy™</div>
+  <div style="margin: 0.5rem 0"><a href="index.html">Home</a><a href="purchase.html">Buy</a><a href="manual.html">Manual</a></div>
+  <div style="margin-top: 0.75rem; font-size: 0.78rem;">© 2026 SmogSpy Technologies. All rights reserved.</div>
+</footer>
+
+<script>
+  const UNIT_PRICE = 299;
+  let qty = 1;
+
+  function changeQty(d) {
+    qty = Math.max(1, Math.min(10, qty + d));
+    document.getElementById('qtyVal').textContent = qty;
+    updateSummary();
+  }
+
+  function updateSummary() {
+    const sub = UNIT_PRICE * qty;
+    const tax = sub * 0.08;
+    const total = sub;
+    document.getElementById('sumUnit').textContent = '$' + UNIT_PRICE.toFixed(2);
+    document.getElementById('sumQty').textContent = '× ' + qty;
+    // document.getElementById('sumTax').textContent = '$' + tax.toFixed(2);
+    document.getElementById('sumTotal').textContent = '$' + total.toFixed(2);
+  }
+
+  function selectVariant(btn, groupId, val) {
+    document.querySelectorAll('#' + groupId + ' .variant-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+  }
+
+  function selectPay(tab, formId) {
+    document.querySelectorAll('.pay-tab').forEach(t => t.classList.remove('selected'));
+    document.querySelectorAll('.pay-form').forEach(f => f.classList.remove('active'));
+    tab.classList.add('selected');
+    document.getElementById(formId).classList.add('active');
+  }
+
+  function placeOrder() {
+    const orderId = 'SS-' + Date.now().toString(36).toUpperCase();
+    document.getElementById('orderId').textContent = orderId;
+    document.getElementById('successModal').classList.add('show');
+  }
+
+  function closeModal() {
+    document.getElementById('successModal').classList.remove('show');
+  }
+
+  document.getElementById('successModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+</script>
+</body>
+</html>
